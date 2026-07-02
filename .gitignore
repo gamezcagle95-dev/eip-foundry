@@ -1,0 +1,7 @@
+/contracts/node_modules/
+/contracts/artifacts/
+/contracts/cache/
+/contracts/typechain/
+/contracts/typechain-types/
+.env
+__pycache__/

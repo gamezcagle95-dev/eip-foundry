@@ -1,0 +1,20 @@
+services:
+  wurkspace:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    volumes:
+      - ..:/wurkspace
+    working_dir: /wurkspace
+    stdin_open: true
+    tty: true
+
+  # Local blockchain for development
+  hardhat-node:
+    image: node:20
+    volumes:
+      - ..:/wurkspace
+    working_dir: /wurkspace/contracts
+    command: npx hardhat node
+    ports:
+      - "8545:8545"
