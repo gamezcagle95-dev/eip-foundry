@@ -21,13 +21,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION} | bash - \
 WORKDIR /wurkspace
 
 # Install Python dependencies (PyTorch)
-# Using CPU version for the base image to keep it portable, can be adjusted for CUDA
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 # Install global node packages
 RUN npm install -g hardhat
 
-# Copy requirements and package files if they exist (they will be mounted in compose)
-# For now, we just ensure the environment is ready
+# Install Gitcoin Passport SDK dependencies (simulated as they are in package.json)
+# RUN npm install @gitcoinco/passport-sdk-reader @gitcoinco/passport-sdk-types
 
 CMD ["/bin/bash"]
