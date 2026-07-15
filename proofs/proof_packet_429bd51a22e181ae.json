@@ -4,9 +4,9 @@
         "version": "1.0.0",
         "timestamp": "2026-07-03T10:03:35.339547+00:00",
         "asset_hash": "16056d8fab3d52ff4909ac10376d7fd6c96417393bc5fb79f0dab86d99213d68",
-        "forensic_status": "VALIDATED",
-        "evaluator": "LexTrinity-Alpha",
-        "forensic_report": {
+        "validation_status": "VALIDATED",
+        "evaluator": "Wurkspace-Validation-Alpha",
+        "integrity_report": {
             "integrity_check": "passed",
             "malware_scan": "clean",
             "provenance_verified": true
