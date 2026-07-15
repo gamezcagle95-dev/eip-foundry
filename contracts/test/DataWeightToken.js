@@ -55,11 +55,18 @@ describe("DataWeightToken", function () {
     const DataWeightToken = await ethers.getContractFactory("DataWeightToken");
     const dwt = await DataWeightToken.deploy(owner.address);
 
-    await dwt.mintDataWeight(otherAccount.address, "https://example.com/weights/1", "0xabc123");
+    await dwt.mintDataWeight(tokenOwner.address, "uri", "hash");
 
-    // Owner of the token is otherAccount. `owner` (contract owner, but not token owner) tries to change it.
+    // The contract owner (deployer) is not the ownerOf(0), so they should be rejected.
     await expect(
-      dwt.connect(owner).setPaymentCollector(0, collector.address)
-    ).to.be.revertedWith("Not authorized");
+      dwt.connect(owner).setPaymentCollector(0, newCollector.address)
+    ).to.be.revertedWithCustomError(dwt, "NotTokenOwner")
+     .withArgs(owner.address, 0);
+
+    // Any third party (nonOwner) should also be rejected.
+    await expect(
+      dwt.connect(nonOwner).setPaymentCollector(0, newCollector.address)
+    ).to.be.revertedWithCustomError(dwt, "NotTokenOwner")
+     .withArgs(nonOwner.address, 0);
   });
 });

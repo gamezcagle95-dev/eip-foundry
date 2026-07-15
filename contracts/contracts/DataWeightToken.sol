@@ -17,8 +17,16 @@ contract DataWeightToken is ERC721URIStorage, Ownable {
     // Mapping from Token ID to designated Payment Collector address
     mapping(uint256 => address) public paymentCollector;
 
+    // Mapping from Token ID to Payment Collector Address
+    mapping(uint256 => address) public paymentCollectors;
+
     event Tokenized(uint256 indexed tokenId, address indexed owner, string proofHash, string tokenURI);
     event PaymentCollectorUpdated(uint256 indexed tokenId, address indexed collector);
+
+    event PaymentCollectorChanged(uint256 indexed tokenId, address indexed oldCollector, address indexed newCollector);
+
+    // Custom error for payment collector authorization
+    error NotTokenOwner(address caller, uint256 tokenId);
 
     constructor(address initialOwner) ERC721("DataWeightToken", "DWT") Ownable(initialOwner) {}
 
@@ -37,20 +45,26 @@ contract DataWeightToken is ERC721URIStorage, Ownable {
         // By default, the payment collector is the token owner
         paymentCollector[tokenId] = to;
 
+        // Initialize payment collector to the recipient
+        paymentCollectors[tokenId] = to;
+        emit PaymentCollectorChanged(tokenId, address(0), to);
+
         emit Tokenized(tokenId, to, proofHash, tokenURI);
         emit PaymentCollectorUpdated(tokenId, to);
         return tokenId;
     }
 
     /**
-     * @dev Sets a designated payment collector for a specific Token ID.
-     * Only the token owner can change the payment collector.
+     * @dev Sets/updates the payment collector address for a given token.
      * @param tokenId The ID of the token.
-     * @param newCollector The address of the new payment collector.
+     * @param paymentCollector The address of the new payment collector.
      */
-    function setPaymentCollector(uint256 tokenId, address newCollector) external {
-        require(ownerOf(tokenId) == msg.sender, "Not authorized");
-        paymentCollector[tokenId] = newCollector;
-        emit PaymentCollectorUpdated(tokenId, newCollector);
+    function setPaymentCollector(uint256 tokenId, address paymentCollector) public {
+        if (ownerOf(tokenId) != msg.sender) {
+            revert NotTokenOwner(msg.sender, tokenId);
+        }
+        address oldCollector = paymentCollectors[tokenId];
+        paymentCollectors[tokenId] = paymentCollector;
+        emit PaymentCollectorChanged(tokenId, oldCollector, paymentCollector);
     }
 }
