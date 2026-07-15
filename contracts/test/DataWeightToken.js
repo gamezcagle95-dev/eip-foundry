@@ -3,7 +3,7 @@ import pkg from "hardhat";
 const { ethers } = pkg;
 
 describe("DataWeightToken", function () {
-  it("Should mint a token with proof hash and URI", async function () {
+  it("Should mint a token with proof hash and URI, setting default collector", async function () {
     const [owner, otherAccount] = await ethers.getSigners();
 
     const DataWeightToken = await ethers.getContractFactory("DataWeightToken");
@@ -16,7 +16,10 @@ describe("DataWeightToken", function () {
 
     expect(await dwt.ownerOf(0)).to.equal(otherAccount.address);
     expect(await dwt.tokenURI(0)).to.equal(tokenURI);
-    expect(await dwt.proofPacketHashes(0)).to.equal(proofHash);
+    expect(await dwt.proofHashes(0)).to.equal(proofHash);
+
+    // Default payment collector is the token owner (otherAccount)
+    expect(await dwt.paymentCollector(0)).to.equal(otherAccount.address);
   });
 
   it("Should only allow owner to mint", async function () {
@@ -30,40 +33,24 @@ describe("DataWeightToken", function () {
     ).to.be.revertedWithCustomError(dwt, "OwnableUnauthorizedAccount");
   });
 
-  it("Should initialize payment collector to token recipient and emit event on minting", async function () {
-    const [owner, recipient] = await ethers.getSigners();
+  it("Should allow the token owner to change the payment collector", async function () {
+    const [owner, otherAccount, collector] = await ethers.getSigners();
 
     const DataWeightToken = await ethers.getContractFactory("DataWeightToken");
     const dwt = await DataWeightToken.deploy(owner.address);
 
-    const tx = dwt.mintDataWeight(recipient.address, "uri", "hash");
-    await expect(tx)
-      .to.emit(dwt, "PaymentCollectorChanged")
-      .withArgs(0, ethers.ZeroAddress, recipient.address);
+    await dwt.mintDataWeight(otherAccount.address, "https://example.com/weights/1", "0xabc123");
 
-    expect(await dwt.paymentCollectors(0)).to.equal(recipient.address);
+    // Change payment collector to collector.address
+    await expect(dwt.connect(otherAccount).setPaymentCollector(0, collector.address))
+      .to.emit(dwt, "PaymentCollectorUpdated")
+      .withArgs(0, collector.address);
+
+    expect(await dwt.paymentCollector(0)).to.equal(collector.address);
   });
 
-  it("Should allow the owner of the token to set a new payment collector", async function () {
-    const [owner, tokenOwner, newCollector] = await ethers.getSigners();
-
-    const DataWeightToken = await ethers.getContractFactory("DataWeightToken");
-    const dwt = await DataWeightToken.deploy(owner.address);
-
-    await dwt.mintDataWeight(tokenOwner.address, "uri", "hash");
-
-    // The ownerOf(0) is tokenOwner. They can set the payment collector.
-    const tx = dwt.connect(tokenOwner).setPaymentCollector(0, newCollector.address);
-
-    await expect(tx)
-      .to.emit(dwt, "PaymentCollectorChanged")
-      .withArgs(0, tokenOwner.address, newCollector.address);
-
-    expect(await dwt.paymentCollectors(0)).to.equal(newCollector.address);
-  });
-
-  it("Should reject setting payment collector from a non-owner of the token", async function () {
-    const [owner, tokenOwner, nonOwner, newCollector] = await ethers.getSigners();
+  it("Should reject non-owners of the token trying to change the payment collector", async function () {
+    const [owner, otherAccount, collector] = await ethers.getSigners();
 
     const DataWeightToken = await ethers.getContractFactory("DataWeightToken");
     const dwt = await DataWeightToken.deploy(owner.address);
