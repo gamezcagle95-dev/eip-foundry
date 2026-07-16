@@ -6,22 +6,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title DataWeightToken
- * @dev Tokenizes AI training data and model weights with embedded provenance hashes and designated payment collectors.
+ * @dev Tokenizes AI training data and model weights with embedded provenance hashes.
  */
 contract DataWeightToken is ERC721URIStorage, Ownable {
     uint256 private _nextTokenId;
 
-    // Mapping from Token ID to Proof Hash (Asset Provenance Hash)
-    mapping(uint256 => string) public proofHashes;
-
-    // Mapping from Token ID to designated Payment Collector address
-    mapping(uint256 => address) public paymentCollector;
+    // Mapping from Token ID to Proof Packet Hash (Forensic Hash)
+    mapping(uint256 => string) public proofPacketHashes;
 
     // Mapping from Token ID to Payment Collector Address
     mapping(uint256 => address) public paymentCollectors;
 
     event Tokenized(uint256 indexed tokenId, address indexed owner, string proofHash, string tokenURI);
-    event PaymentCollectorUpdated(uint256 indexed tokenId, address indexed collector);
 
     event PaymentCollectorChanged(uint256 indexed tokenId, address indexed oldCollector, address indexed newCollector);
 
@@ -34,23 +30,19 @@ contract DataWeightToken is ERC721URIStorage, Ownable {
      * @dev Mints a new token representing a validated AI asset.
      * @param to The address that will own the minted token.
      * @param tokenURI The metadata URI (e.g., IPFS link to weight metadata).
-     * @param proofHash The generated Proof Hash.
+     * @param proofHash The LexTrinity generated Proof Packet Hash.
      */
     function mintDataWeight(address to, string memory tokenURI, string memory proofHash) public onlyOwner returns (uint256) {
         uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, tokenURI);
-        proofHashes[tokenId] = proofHash;
-
-        // By default, the payment collector is the token owner
-        paymentCollector[tokenId] = to;
+        proofPacketHashes[tokenId] = proofHash;
 
         // Initialize payment collector to the recipient
         paymentCollectors[tokenId] = to;
         emit PaymentCollectorChanged(tokenId, address(0), to);
 
         emit Tokenized(tokenId, to, proofHash, tokenURI);
-        emit PaymentCollectorUpdated(tokenId, to);
         return tokenId;
     }
 

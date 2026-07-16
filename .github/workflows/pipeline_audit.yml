@@ -1,4 +1,4 @@
-name: Asset Validation Pipeline & Gatekeeper
+name: Pipeline Audit & Gatekeeper
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  validate:
+  audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,12 +21,12 @@ jobs:
         run: |
           pip install -r pipelines/requirements.txt --index-url https://download.pytorch.org/whl/cpu
 
-      - name: Run Asset Validation Gate
+      - name: Run LexTrinity Forensic Evaluation
         run: |
-          # Create a mock weight file for validation
-          echo "validation asset data" > validation_weights.bin
-          python pipelines/src/pipeline_hashing.py validation_weights.bin
-          rm validation_weights.bin
+          # Create a mock weight file for the audit
+          echo "forensic audit data" > audit_weights.bin
+          python pipelines/src/pipeline_hashing.py audit_weights.bin
+          rm audit_weights.bin
 
       - name: Verify Smart Contracts
         run: |
