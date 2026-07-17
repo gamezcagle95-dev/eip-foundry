@@ -3,3 +3,4 @@ torchvision
 torchaudio
 cryptography
 requests
+web3

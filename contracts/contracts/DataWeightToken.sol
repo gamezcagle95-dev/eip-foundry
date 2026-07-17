@@ -14,7 +14,15 @@ contract DataWeightToken is ERC721URIStorage, Ownable {
     // Mapping from Token ID to Proof Packet Hash (Forensic Hash)
     mapping(uint256 => string) public proofPacketHashes;
 
+    // Mapping from Token ID to Payment Collector Address
+    mapping(uint256 => address) public paymentCollectors;
+
     event Tokenized(uint256 indexed tokenId, address indexed owner, string proofHash, string tokenURI);
+
+    event PaymentCollectorChanged(uint256 indexed tokenId, address indexed oldCollector, address indexed newCollector);
+
+    // Custom error for payment collector authorization
+    error NotTokenOwner(address caller, uint256 tokenId);
 
     constructor(address initialOwner) ERC721("DataWeightToken", "DWT") Ownable(initialOwner) {}
 
@@ -30,7 +38,25 @@ contract DataWeightToken is ERC721URIStorage, Ownable {
         _setTokenURI(tokenId, tokenURI);
         proofPacketHashes[tokenId] = proofHash;
 
+        // Initialize payment collector to the recipient
+        paymentCollectors[tokenId] = to;
+        emit PaymentCollectorChanged(tokenId, address(0), to);
+
         emit Tokenized(tokenId, to, proofHash, tokenURI);
         return tokenId;
+    }
+
+    /**
+     * @dev Sets/updates the payment collector address for a given token.
+     * @param tokenId The ID of the token.
+     * @param paymentCollector The address of the new payment collector.
+     */
+    function setPaymentCollector(uint256 tokenId, address paymentCollector) public {
+        if (ownerOf(tokenId) != msg.sender) {
+            revert NotTokenOwner(msg.sender, tokenId);
+        }
+        address oldCollector = paymentCollectors[tokenId];
+        paymentCollectors[tokenId] = paymentCollector;
+        emit PaymentCollectorChanged(tokenId, oldCollector, paymentCollector);
     }
 }
