@@ -1,0 +1,12 @@
+# GitHub Labeler configuration
+contracts:
+  - changed-files:
+      - any-glob-to-any-file: 'contracts/**/*'
+
+pipelines:
+  - changed-files:
+      - any-glob-to-any-file: 'pipelines/**/*'
+
+workflows:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
