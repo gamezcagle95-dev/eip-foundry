@@ -1,0 +1,260 @@
+# Instincts generated from https://github.com/gamezcagle95-dev/eip-foundry
+# Generated: 2026-07-17T19:22:16.099Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: eip-foundry-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: docs
+
+## Evidence
+
+- 1 commits analyzed
+- Detected conventional commit pattern
+- Examples: docs: create AGENTS.md outlining setup and workflow guidelines
+
+---
+id: eip-foundry-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Commit Length
+
+## Action
+
+Write moderate-length commit messages (~62 characters)
+
+## Evidence
+
+- Average commit message length: 62 chars
+- Based on 1 commits
+
+---
+id: eip-foundry-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Naming Files
+
+## Action
+
+Use PascalCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: PascalCase
+
+---
+id: eip-foundry-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: eip-foundry-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: eip-foundry-instinct-camelCase-functions
+trigger: "When defining a function in Python"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct CamelCase Functions
+
+## Action
+
+Name the function using camelCase (e.g., myFunction)
+
+## Evidence
+
+- Pattern in namingConventions.functions
+
+---
+id: eip-foundry-instinct-pascalCase-classes
+trigger: "When defining a class in Python"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct PascalCase Classes
+
+## Action
+
+Name the class using PascalCase (e.g., MyClass)
+
+## Evidence
+
+- Pattern in namingConventions.classes
+
+---
+id: eip-foundry-instinct-screaming-snake-constants
+trigger: "When defining a constant in Python"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct Screaming Snake Constants
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE (e.g., MY_CONSTANT)
+
+## Evidence
+
+- Pattern in namingConventions.constants
+
+---
+id: eip-foundry-instinct-pascalCase-files
+trigger: "When creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct PascalCase Files
+
+## Action
+
+Name the file using PascalCase (e.g., MyFile.py)
+
+## Evidence
+
+- Pattern in namingConventions.files
+
+---
+id: eip-foundry-instinct-relative-imports
+trigger: "When importing modules within the package"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct Relative Imports
+
+## Action
+
+Use relative imports (e.g., from .module import X)
+
+## Evidence
+
+- Pattern in importStyle
+
+---
+id: eip-foundry-instinct-named-exports
+trigger: "When exporting functions or classes from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct Named Exports
+
+## Action
+
+Use named exports (e.g., __all__ = ['MyClass', 'myFunction'])
+
+## Evidence
+
+- Pattern in exportStyle
+
+---
+id: eip-foundry-instinct-mixed-test-location
+trigger: "When adding tests"
+confidence: 0.7
+domain: testing
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct Mixed Test Location
+
+## Action
+
+Place test files either alongside source files or in a dedicated test folder, as both are used
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation
+
+---
+id: eip-foundry-instinct-conventional-commit-docs
+trigger: "When committing documentation changes"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: gamezcagle95-dev/eip-foundry
+---
+
+# Eip Foundry Instinct Conventional Commit Docs
+
+## Action
+
+Prefix the commit message with 'docs:' followed by a concise description
+
+## Evidence
+
+- Seen in commit 'docs: create AGENTS.md outlining setup and workflow guidelines'
+- Pattern in commits.prefixes
+
